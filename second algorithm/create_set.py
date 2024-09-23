@@ -1,8 +1,8 @@
 import random
 
 # the number of points of set P
-num_points = 400
-coord_range = [0, 400]
+num_points = 40
+coord_range = [0, 40]
 P = []
 
 def create_set():

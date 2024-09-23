@@ -1,7 +1,7 @@
 from create_set import create_set
 from scipy.spatial import KDTree
 import matplotlib.pyplot as plt
-import numpy as np
+import matplotlib.patches as patches
 
 # use this function to create the data set of 2D points
 points = create_set()
@@ -12,6 +12,39 @@ tree = KDTree(points)
 # sort points by its y-coordinate
 points.sort(key=lambda x:x[1])
 
+#rectangle = [x_low, x_high, y_low, y_high]
+def plot_points(points, rectangle):
+    # Create a new figure and axis
+    fig, ax = plt.subplots()
+
+    # Define points to be plotted
+    points_x = [p[0] for p in points]
+    points_y = [p[1] for p in points]
+
+    # Plot points
+    ax.scatter(points_x, points_y, s=5, color='blue', label='Points')
+
+    # Define rectangle parameters (lower-left corner x, y, width, height)
+    rect = patches.Rectangle((rectangle[0], rectangle[2]), rectangle[1] - rectangle[0], rectangle[3] - rectangle[2], linewidth=1, edgecolor='red', facecolor='none')
+
+    # Add rectangle to the plot
+    ax.add_patch(rect)
+
+    # Set limits for the axes
+    ax.set_xlim(-5, 45)
+    ax.set_ylim(-5, 45)
+
+    # Add labels and title
+    ax.set_xlabel('X-axis')
+    ax.set_ylabel('Y-axis')
+    ax.set_title('Points and Rectangle')
+
+    # Show legend
+    ax.legend()
+
+    # Display the plot
+    plt.show()
+
 # return the number of points inside rectangle and also the points for the best solution
 def count_points_inside(x_low, x_high, y_low, y_high):
     points_in_box = tree.query_ball_point([x_low, y_low], r=max(x_high - x_low, y_high - y_low))
@@ -19,54 +52,72 @@ def count_points_inside(x_low, x_high, y_low, y_high):
     filtered_points_indices = [p for p in points_in_box if x_low <= points[p][0] <= x_high and y_low <= points[p][1] <= y_high]                          
     
     # find the points inside the box
-    #print([points[p] for p in filtered_points_indices])
+    #points_inside = [points[p] for p in filtered_points_indices]
 
     return len(filtered_points_indices)
 
-'''xa = []
-ya = []
-
-for i in points:
-    
-    xa.append(i[0])
-    ya.append(i[1])
-    print(i)
-    print('\n')
-plt.plot(xa, ya, 'o')
-
-plt.show()'''
-
+# returns the maximum number of points inside a box 
+# considering the curremt line and the four boxes explained in paper
 def current_max_inside(line, points, area):
     count = 0
+    best_box = []
 
     for p in points:
         # point above line l
         if p[1] > line:
             # we know that area = (y_high - y_low)*(x_high - x_low), so we compute the needed values
-            count_right = count_points_inside(p[0], (area + (p[0] * (p[1] - line))) / (p[1] - line), line, p[1])
+            x_low = p[0]
+            x_high = (area + (p[0] * (p[1] - line))) / (p[1] - line)
+            y_low = line
+            y_high = p[1]
+
+            count_right = count_points_inside(x_low, x_high, y_low, y_high)
             if count_right > count:
                 count = count_right
+                best_box = [x_low, x_high, y_low, y_high].copy()
 
-            count_left = count_points_inside(((p[0] * (p[1] - line)) - area) / (p[1] - line), p[0], line, p[1])
+            x_low = ((p[0] * (p[1] - line)) - area) / (p[1] - line)
+            x_high = p[0]
+
+            count_left = count_points_inside(x_low, x_high, y_low, y_high)
             if count_left > count:
                 count = count_left
+                best_box = [x_low, x_high, y_low, y_high].copy()
 
         if p[1] < line:
-            count_right = count_points_inside(p[0], (area + (p[0] * (line - p[1]))) / (line - p[1]), p[1], line)
+            x_low = p[0]
+            x_high = (area + (p[0] * (line - p[1]))) / (line - p[1])
+            y_low = p[1]
+            y_high = line
+
+            count_right = count_points_inside(x_low, x_high, y_low, y_high)
             if count_right > count:
                 count = count_right
+                best_box = [x_low, x_high, y_low, y_high].copy()
 
-            count_left = count_points_inside(((p[0] * (line - p[1])) - area) / (line - p[1]), p[0], p[1], line)
+            x_low = ((p[0] * (line - p[1])) - area) / (line - p[1])
+            x_high = p[0]
+
+            count_left = count_points_inside(x_low, x_high, y_low, y_high)
             if count_left > count:
                 count = count_left
+                best_box = [x_low, x_high, y_low, y_high].copy()
 
-    return count
+    return count, best_box
+
+def find_max(max_below, max_above, max_current, box_below, box_above, box_current):
+    if (max_below >= max_above) and (max_below >= max_current):
+        return max_below, box_below
+    elif (max_above >= max_below) and (max_above >= max_current):
+        return max_above, box_above
+    else:
+        return max_current, box_current
 
 # returns the max number of points inside a box with area a
 def max_points_in_box(points, area):
     # base case of recursion
     if len(points) <= 1:
-        return 1
+        return 1, points
     
     med_index = len(points) // 2
 
@@ -77,11 +128,15 @@ def max_points_in_box(points, area):
     points_below = points[:med_index]
     points_above = points[med_index:]
 
-    max_below = max_points_in_box(points_below, area)
-    max_above = max_points_in_box(points_above, area)
+    max_below, box_below = max_points_in_box(points_below, area)
+    max_above, box_above = max_points_in_box(points_above, area)
 
-    max_current = current_max_inside(line, points, area)
+    max_current, box_current = current_max_inside(line, points, area)
 
-    return max(max_below, max_above, max_current)
+    return find_max(max_below, max_above, max_current, box_below, box_above, box_current)
 
-print(max_points_in_box(points, 10000))
+solution = max_points_in_box(points, 200)
+
+plot_points(points, solution[1])
+print(solution)
+
