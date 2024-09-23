@@ -4,8 +4,6 @@ import bisect
 # number of nearest x-coordinate points for each point of the set B
 CLOSEST = 4
 
-
-
 #returns the place of unfinished array where the point of set A
 #belongs, accorning to Rl'y < ay
 #returns -1 if it doesnt belong anywhere

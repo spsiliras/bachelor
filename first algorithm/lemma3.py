@@ -83,4 +83,6 @@ def lemma3():
         new.append(v)
         setQ.append(new)
 
+        print(setQ[i])
+
     return setQ

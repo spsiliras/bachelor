@@ -1,5 +1,2 @@
-a = [[2,3], [2,8], [3,2]]
-
-a = sorted(a, key=lambda x:x[1], reverse=True)
-
+a = 5 // 2
 print(a)
