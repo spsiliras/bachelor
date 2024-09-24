@@ -3,7 +3,9 @@ from create_set import create_set
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
-points = create_set()
+coord_range = [0, 40]
+points = create_set(100, coord_range)
+
 points.sort(key=lambda x:x[1])
 
 #rectangle = [x_low, x_high, y_low, y_high]
@@ -25,8 +27,8 @@ def plot_points(points, rectangle):
     ax.add_patch(rect)
 
     # Set limits for the axes
-    ax.set_xlim(-5, 45)
-    ax.set_ylim(-5, 45)
+    ax.set_xlim(coord_range[0] - 5, coord_range[1] + 5)
+    ax.set_ylim(coord_range[0] - 5, coord_range[1] + 5)
 
     # Add labels and title
     ax.set_xlabel('X-axis')

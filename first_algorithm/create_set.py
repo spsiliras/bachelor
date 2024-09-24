@@ -1,11 +1,8 @@
 import random
 
-# the number of points of set P
-num_points = 40
-coord_range = [0, 40]
 P = []
 
-def create_set():
+def create_set(num_points, coord_range):
 
     for i in range(0, num_points):
         new = []
