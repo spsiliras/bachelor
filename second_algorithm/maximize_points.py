@@ -4,7 +4,9 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
 # use this function to create the data set of 2D points
-points = create_set()
+coord_range = [0, 40]
+# create_set(# of points of set, coordinates range)
+points = create_set(100, coord_range)
 
 # store points in a kd-tree so its more efficient to query if a point is inside box
 tree = KDTree(points)
@@ -31,8 +33,8 @@ def plot_points(points, rectangle):
     ax.add_patch(rect)
 
     # Set limits for the axes
-    ax.set_xlim(-5, 45)
-    ax.set_ylim(-5, 45)
+    ax.set_xlim(coord_range[0] - 5, coord_range[1] + 5)
+    ax.set_ylim(coord_range[0] - 5, coord_range[1] + 5)
 
     # Add labels and title
     ax.set_xlabel('X-axis')
@@ -135,7 +137,7 @@ def max_points_in_box(points, area):
 
     return find_max(max_below, max_above, max_current, box_below, box_above, box_current)
 
-solution = max_points_in_box(points, 200)
+solution = max_points_in_box(points, 25)
 
 plot_points(points, solution[1])
 print(solution)

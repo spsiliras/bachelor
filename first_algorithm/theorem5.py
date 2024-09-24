@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
 coord_range = [0, 40]
+# create_set(# of points of set, coordinates range)
 points = create_set(100, coord_range)
 
 points.sort(key=lambda x:x[1])
