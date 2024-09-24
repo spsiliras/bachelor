@@ -1,12 +1,9 @@
 import random
 import bisect
 
-#the number of points of the best box
-K = 4
-
 #returns the min area box for the current set Qi
 #and an array with the points of the solution
-def compute_best_top_box(array, q_top, q_bot):
+def compute_best_top_box(array, q_top, q_bot, num_points):
     #keep the indexes 
     top_index = array.index(q_top)
     bot_index = array.index(q_bot)
@@ -18,25 +15,25 @@ def compute_best_top_box(array, q_top, q_bot):
 
     #that means that there is not a box which contains both
     #top and bottom point
-    if(abs(top_index - bot_index) >= K):
+    if(abs(top_index - bot_index) >= num_points):
         return [minimum, best]
     
     else:
-        for i in range(0,len(array)+1-K):
+        for i in range(0,len(array)+1-num_points):
 
             #the box it must contains both bottom and top points
-            if((q_top in array[i:i+K]) and (q_bot in array[i:i+K])):
-                new_min = (array[i+K-1][0] - array[i][0]) * (q_top[1] - q_bot[1])
+            if((q_top in array[i:i+num_points]) and (q_bot in array[i:i+num_points])):
+                new_min = (array[i+num_points-1][0] - array[i][0]) * (q_top[1] - q_bot[1])
 
                 #check if the new area is less than the previous one
                 if(new_min < minimum):
                     minimum = new_min
-                    #update the points of the best current solution
-                    best = array[i:i+K].copy()
+                    # store rectangle coordinates in form of [x_low, x_high, y_low, y_high]
+                    best = [array[i][0], array[i+num_points-1][0], q_bot[1], q_top[1]].copy()
 
     return [minimum, best]
 
-def compute_best_bot_box(array, q_bot, q_top):
+def compute_best_bot_box(array, q_bot, q_top, num_points):
     #keep the indexes 
     top_index = array.index(q_top)
     bot_index = array.index(q_bot)
@@ -48,25 +45,25 @@ def compute_best_bot_box(array, q_bot, q_top):
 
     #that means that there is not a box which contains both
     #top and bottom point
-    if(abs(top_index - bot_index) >= K):
+    if(abs(top_index - bot_index) >= num_points):
         return [minimum, best]
     
     else:
-        for i in range(0,len(array)+1-K):
+        for i in range(0,len(array)+1-num_points):
 
             #the box it must contains both bottom and top points
-            if((q_top in array[i:i+K]) and (q_bot in array[i:i+K])):
-                new_min = (array[i+K-1][0] - array[i][0]) * (q_top[1] - q_bot[1])
+            if((q_top in array[i:i+num_points]) and (q_bot in array[i:i+num_points])):
+                new_min = (array[i+num_points-1][0] - array[i][0]) * (q_top[1] - q_bot[1])
 
                 #check if the new area is less than the previous one
                 if(new_min < minimum):
                     minimum = new_min
                     #update the points of the best current solution
-                    best = array[i:i+K].copy()
+                    best = [array[i][0], array[i+num_points-1][0], q_bot[1], q_top[1]].copy()
 
     return [minimum, best]
 
-def lemma2(array):
+def lemma2(array, num_points):
 
     #Q_top sorted by increasing x-coordinate
     qTopSorted = []
@@ -90,9 +87,9 @@ def lemma2(array):
         array = sorted(array, key=lambda x:x[1], reverse=True)
         
 
-        while(len(array) >= K):
+        while(len(array) >= num_points):
             #result is a list of the form of [minimum_value, solution_points] 
-            result = compute_best_top_box(qTopSorted, q, array[len(array)-1])
+            result = compute_best_top_box(qTopSorted, q, array[len(array)-1], num_points)
             
             #update the total min and the current best points of solution
             if result[0] < m:
@@ -112,8 +109,8 @@ def lemma2(array):
 
         array = sorted(array, key=lambda x:x[1])
 
-        while(len(array) >= K):
-            result = compute_best_bot_box(qBotSorted, q, array[len(array)-1])
+        while(len(array) >= num_points):
+            result = compute_best_bot_box(qBotSorted, q, array[len(array)-1], num_points)
 
             if result[0] < m:
                 m = result[0]

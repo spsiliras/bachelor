@@ -2,7 +2,6 @@
 # p1 is the points above line l and symmetric points below l
 # p2 is the points below line l and symmetric points above l
 
-from create_set import create_set
 from lemma1_below import lemma1_below
 from lemma1_above import lemma1_above
 
@@ -47,31 +46,30 @@ def find_symmetric(point, l):
 
     return new_point
 
-def lemma3():
-    p = create_set()
-    p_plus, p_minus = separate_set(p, 19)
+def lemma3(points, line, num_points):
+    p_plus, p_minus = separate_set(points, line)
 
     # below right
-    sol1, un1 = lemma1_below(p_minus, 0)
+    sol1, un1 = lemma1_below(p_minus, 0, num_points)
     br = sol1 + un1
     br.sort(key=lambda x:x[0])
 
     # below left
-    sol2, un2 = lemma1_below(p_minus, 1)
+    sol2, un2 = lemma1_below(p_minus, 1, num_points)
     bl = sol2 + un2
     bl.sort(key=lambda x:x[0])
 
     # above right
-    sol3, un3 = lemma1_above(p_plus, 2)
+    sol3, un3 = lemma1_above(p_plus, 2, num_points)
     ar = sol3 + un3
     ar.sort(key=lambda x:x[0])
 
     # above left
-    sol4, un4 = lemma1_above(p_plus, 3)
+    sol4, un4 = lemma1_above(p_plus, 3, num_points)
     al = sol4 + un4
     al.sort(key=lambda x:x[0])
 
-    p.sort(key=lambda x:x[0])
+    p = sorted(points, key=lambda x:x[0])
     setQ = []
 
     for i in range(0, len(p)):
@@ -82,7 +80,5 @@ def lemma3():
         v = br[i][2] + bl[i][2] + ar[i][2] + al[i][2]
         new.append(v)
         setQ.append(new)
-
-        print(setQ[i])
 
     return setQ

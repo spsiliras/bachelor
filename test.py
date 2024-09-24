@@ -1,8 +1,6 @@
-a = [[1,2],[3,5],[6,8]]
-b=[]
+a = [[1,6],[3,5],[6,8]]
+b=sorted(a, key=lambda x:x[1])
 
-for i in range(0,5):
-    a[2][1] = i
-    b = a.copy()
+print(a)
 
 print(b)
