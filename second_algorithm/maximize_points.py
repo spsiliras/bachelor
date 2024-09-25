@@ -41,9 +41,6 @@ def plot_points(points, rectangle):
     ax.set_ylabel('Y-axis')
     ax.set_title('Points and Rectangle')
 
-    # Show legend
-    ax.legend()
-
     # Display the plot
     plt.show()
 
@@ -137,7 +134,7 @@ def max_points_in_box(points, area):
 
     return find_max(max_below, max_above, max_current, box_below, box_above, box_current)
 
-solution = max_points_in_box(points, 25)
+solution = max_points_in_box(points, 500)
 
 plot_points(points, solution[1])
 print(solution)

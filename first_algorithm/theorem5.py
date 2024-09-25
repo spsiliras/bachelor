@@ -3,9 +3,9 @@ from create_set import create_set
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
-coord_range = [0, 40]
+coord_range = [0, 80]
 # create_set(# of points of set, coordinates range)
-points = create_set(100, coord_range)
+points = create_set(180, coord_range)
 
 points.sort(key=lambda x:x[1])
 
@@ -35,9 +35,6 @@ def plot_points(points, rectangle):
     ax.set_xlabel('X-axis')
     ax.set_ylabel('Y-axis')
     ax.set_title('Points and Rectangle')
-
-    # Show legend
-    ax.legend()
 
     # Display the plot
     plt.show()
@@ -73,7 +70,7 @@ def minimize_area(points, num_points):
 
     return find_min(min_area_below, min_area_above, min_current_area, best_box_below, best_box_above, current_best)
 
-area, box = minimize_area(points, 7)
+area, box = minimize_area(points, 20)
 print(area, box)
 
 plot_points(points, box)
