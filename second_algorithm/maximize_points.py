@@ -3,10 +3,16 @@ from scipy.spatial import KDTree
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
-# use this function to create the data set of 2D points
-coord_range = [0, 40]
+# dimensions of the block of points
+coord_range = [0, 20]
+# the number of points to be created
+user_num_points = 100
+# the specific area of the box, given by the user
+user_area = 40
+
+
 # create_set(# of points of set, coordinates range)
-points = create_set(100, coord_range)
+points = create_set(user_num_points, coord_range)
 
 # store points in a kd-tree so its more efficient to query if a point is inside box
 tree = KDTree(points)
@@ -134,8 +140,8 @@ def max_points_in_box(points, area):
 
     return find_max(max_below, max_above, max_current, box_below, box_above, box_current)
 
-solution = max_points_in_box(points, 500)
+solution = max_points_in_box(points, user_area)
 
-plot_points(points, solution[1])
 print(solution)
+plot_points(points, solution[1])
 

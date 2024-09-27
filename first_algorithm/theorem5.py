@@ -3,40 +3,47 @@ from create_set import create_set
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
-coord_range = [0, 80]
+coord_range = [0, 20]
+# the number of points of set P
+user_num_points = 20
+# the number of points inside the box, given by the user
+user_goal_points = 5
+
+
+
 # create_set(# of points of set, coordinates range)
-points = create_set(180, coord_range)
+points = create_set(user_num_points, coord_range)
 
 points.sort(key=lambda x:x[1])
 
 #rectangle = [x_low, x_high, y_low, y_high]
 def plot_points(points, rectangle):
-    # Create a new figure and axis
+    # create a new figure and axis
     fig, ax = plt.subplots()
 
-    # Define points to be plotted
+    # define points to be plotted
     points_x = [p[0] for p in points]
     points_y = [p[1] for p in points]
 
-    # Plot points
+    # plot points
     ax.scatter(points_x, points_y, s=5, color='blue', label='Points')
 
-    # Define rectangle parameters (lower-left corner x, y, width, height)
+    # define rectangle parameters (lower-left corner x, y, width, height)
     rect = patches.Rectangle((rectangle[0], rectangle[2]), rectangle[1] - rectangle[0], rectangle[3] - rectangle[2], linewidth=1, edgecolor='red', facecolor='none')
 
-    # Add rectangle to the plot
+    # ddd rectangle to the plot
     ax.add_patch(rect)
 
-    # Set limits for the axes
+    # set limits for the axes
     ax.set_xlim(coord_range[0] - 5, coord_range[1] + 5)
     ax.set_ylim(coord_range[0] - 5, coord_range[1] + 5)
 
-    # Add labels and title
+    # add labels and title
     ax.set_xlabel('X-axis')
     ax.set_ylabel('Y-axis')
     ax.set_title('Points and Rectangle')
 
-    # Display the plot
+    # display the plot
     plt.show()
 
 def find_min(min_area_below, min_area_above, min_current_area, best_box_below, best_box_above, current_best):
@@ -70,7 +77,7 @@ def minimize_area(points, num_points):
 
     return find_min(min_area_below, min_area_above, min_current_area, best_box_below, best_box_above, current_best)
 
-area, box = minimize_area(points, 20)
+area, box = minimize_area(points, user_goal_points)
 print(area, box)
 
 plot_points(points, box)
