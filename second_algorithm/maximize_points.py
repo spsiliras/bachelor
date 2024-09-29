@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
 # dimensions of the block of points
-coord_range = [0, 20]
+coord_range = [0, 40]
 # the number of points to be created
 user_num_points = 100
 # the specific area of the box, given by the user
@@ -13,6 +13,8 @@ user_area = 40
 
 # create_set(# of points of set, coordinates range)
 points = create_set(user_num_points, coord_range)
+
+#points = [[1, 7], [4, 4], [5, 2], [7, 1]]
 
 # store points in a kd-tree so its more efficient to query if a point is inside box
 tree = KDTree(points)
@@ -59,7 +61,8 @@ def count_points_inside(x_low, x_high, y_low, y_high):
     # find the points inside the box
     #points_inside = [points[p] for p in filtered_points_indices]
 
-    return len(filtered_points_indices)
+    # plus 1 because of the point in the corner
+    return len(filtered_points_indices) + 1
 
 # returns the maximum number of points inside a box 
 # considering the curremt line and the four boxes explained in paper
@@ -121,13 +124,13 @@ def find_max(max_below, max_above, max_current, box_below, box_above, box_curren
 # returns the max number of points inside a box with area a
 def max_points_in_box(points, area):
     # base case of recursion
-    if len(points) <= 1:
+    if len(points) <= 2:
         return 1, points
     
     med_index = len(points) // 2
 
     # line = c
-    line = ((points[med_index][1] - points[med_index - 1][1]) / 2) + points[med_index - 1][1]
+    line = (points[med_index][1] + points[med_index - 1][1]) / 2
 
     # split set into two sub-sets of roughly equal number of points
     points_below = points[:med_index]

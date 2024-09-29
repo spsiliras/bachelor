@@ -3,16 +3,18 @@ from create_set import create_set
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
-coord_range = [0, 20]
+coord_range = [0, 40]
 # the number of points of set P
-user_num_points = 20
+user_num_points = 100
 # the number of points inside the box, given by the user
-user_goal_points = 5
+user_goal_points = 10
 
 
 
 # create_set(# of points of set, coordinates range)
 points = create_set(user_num_points, coord_range)
+
+#points = [[1, 7], [4, 4], [6, 2], [7, 1]]
 
 points.sort(key=lambda x:x[1])
 
