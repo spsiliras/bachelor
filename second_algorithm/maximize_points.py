@@ -6,9 +6,9 @@ import matplotlib.patches as patches
 # dimensions of the block of points
 coord_range = [0, 40]
 # the number of points to be created
-user_num_points = 100
+user_num_points = 400
 # the specific area of the box, given by the user
-user_area = 40
+user_area = 10
 
 
 # create_set(# of points of set, coordinates range)
@@ -16,11 +16,11 @@ points = create_set(user_num_points, coord_range)
 
 #points = [[1, 7], [4, 4], [5, 2], [7, 1]]
 
-# store points in a kd-tree so its more efficient to query if a point is inside box
-tree = KDTree(points)
-
 # sort points by its y-coordinate
 points.sort(key=lambda x:x[1])
+
+# store points in a kd-tree so its more efficient to query if a point is inside box
+tree = KDTree(points)
 
 #rectangle = [x_low, x_high, y_low, y_high]
 def plot_points(points, rectangle):
@@ -61,8 +61,7 @@ def count_points_inside(x_low, x_high, y_low, y_high):
     # find the points inside the box
     #points_inside = [points[p] for p in filtered_points_indices]
 
-    # plus 1 because of the point in the corner
-    return len(filtered_points_indices) + 1
+    return len(filtered_points_indices)
 
 # returns the maximum number of points inside a box 
 # considering the curremt line and the four boxes explained in paper
@@ -122,10 +121,11 @@ def find_max(max_below, max_above, max_current, box_below, box_above, box_curren
         return max_current, box_current
 
 # returns the max number of points inside a box with area a
-def max_points_in_box(points, area):
+def max_points_in_box(points, area, line):
     # base case of recursion
     if len(points) <= 2:
-        return 1, points
+        
+        return current_max_inside(line, points, area)
     
     med_index = len(points) // 2
 
@@ -136,14 +136,14 @@ def max_points_in_box(points, area):
     points_below = points[:med_index]
     points_above = points[med_index:]
 
-    max_below, box_below = max_points_in_box(points_below, area)
-    max_above, box_above = max_points_in_box(points_above, area)
+    max_below, box_below = max_points_in_box(points_below, area, line)
+    max_above, box_above = max_points_in_box(points_above, area, line)
 
     max_current, box_current = current_max_inside(line, points, area)
 
     return find_max(max_below, max_above, max_current, box_below, box_above, box_current)
 
-solution = max_points_in_box(points, user_area)
+solution = max_points_in_box(points, user_area, 5)
 
 print(solution)
 plot_points(points, solution[1])
