@@ -5,9 +5,9 @@ import matplotlib.patches as patches
 
 coord_range = [0, 40]
 # the number of points of set P
-user_num_points = 20
+user_num_points = 80
 # the number of points inside the box, given by the user
-user_goal_points = 4
+user_goal_points = 15
 
 
 
@@ -66,7 +66,7 @@ def minimize_area(points, num_points):
     med_index = len(points) // 2
 
     # line = c
-    line = ((points[med_index][1] - points[med_index - 1][1]) / 2) + points[med_index - 1][1]
+    line = (points[med_index][1] + points[med_index - 1][1]) / 2
 
     # split set into two sub-sets of roughly equal number of points
     points_below = points[:med_index]

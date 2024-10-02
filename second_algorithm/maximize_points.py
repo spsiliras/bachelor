@@ -6,9 +6,9 @@ import matplotlib.patches as patches
 # dimensions of the block of points
 coord_range = [0, 40]
 # the number of points to be created
-user_num_points = 400
+user_num_points = 40
 # the specific area of the box, given by the user
-user_area = 10
+user_area = 20
 
 
 # create_set(# of points of set, coordinates range)
@@ -143,7 +143,12 @@ def max_points_in_box(points, area, line):
 
     return find_max(max_below, max_above, max_current, box_below, box_above, box_current)
 
-solution = max_points_in_box(points, user_area, 5)
+med = len(points) // 2
+
+# line = c
+init_line = (points[med][1] + points[med - 1][1]) / 2
+
+solution = max_points_in_box(points, user_area, init_line)
 
 print(solution)
 plot_points(points, solution[1])
