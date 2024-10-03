@@ -36,10 +36,8 @@ def separate_set(P, l):
 def find_symmetric(point, l):
     new_point = []
     new_point.append(point[0])
-    if point[1] > l:
-        new_point.append(l - (point[1] - l))
-    else:
-        new_point.append(l + (l - point[1]))
+    
+    new_point.append(2*l - point[1])
 
     #insert a flag for use in lemma1
     new_point.append(1)
@@ -54,15 +52,21 @@ def lemma3(points, line, num_points):
     br = sol1 + un1
     br.sort(key=lambda x:x[0])
 
+    #print(br)
+
     # below left
     sol2, un2 = lemma1_below(p_minus, 1, num_points)
     bl = sol2 + un2
     bl.sort(key=lambda x:x[0])
 
+    #print(bl)
+
     # above right
     sol3, un3 = lemma1_above(p_plus, 2, num_points)
     ar = sol3 + un3
     ar.sort(key=lambda x:x[0])
+
+    #print(ar)
 
     # above left
     sol4, un4 = lemma1_above(p_plus, 3, num_points)

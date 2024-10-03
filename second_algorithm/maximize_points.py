@@ -6,9 +6,9 @@ import matplotlib.patches as patches
 # dimensions of the block of points
 coord_range = [0, 40]
 # the number of points to be created
-user_num_points = 40
+user_num_points = 100
 # the specific area of the box, given by the user
-user_area = 20
+user_area = 50
 
 
 # create_set(# of points of set, coordinates range)
@@ -123,7 +123,7 @@ def find_max(max_below, max_above, max_current, box_below, box_above, box_curren
 # returns the max number of points inside a box with area a
 def max_points_in_box(points, area, line):
     # base case of recursion
-    if len(points) <= 2:
+    if len(points) <= 1:
         
         return current_max_inside(line, points, area)
     

@@ -7,7 +7,7 @@ coord_range = [0, 40]
 # the number of points of set P
 user_num_points = 80
 # the number of points inside the box, given by the user
-user_goal_points = 15
+user_goal_points = 10
 
 
 
